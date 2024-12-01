@@ -1,0 +1,55 @@
+import copy
+import random
+# Consider using the modules imported above.
+
+class Hat:
+
+  def __init__(self, **kwargs):
+    self.contents = []
+    for key, value in kwargs.items():
+      for _ in range(value):
+        self.contents.append(key)
+
+  def draw(self, balls: int):
+        if balls >= len(self.contents):
+            balls = len(self.contents)
+        drawn = random.sample(self.contents, k=balls)
+        for ball in drawn:
+            self.contents.remove(ball)
+        
+        return drawn
+def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
+
+  expected_no_of_balls = []
+  for key in expected_balls:
+      expected_no_of_balls.append(expected_balls[key])
+  successes = 0
+
+  for _ in range(num_experiments):
+    new_hat = copy.deepcopy(hat)
+    balls = new_hat.draw(num_balls_drawn)
+
+    no_of_balls = []
+    for key in expected_balls:
+      no_of_balls.append(balls.count(key))
+
+    if no_of_balls >= expected_no_of_balls:
+      successes += 1
+
+  return successes/num_experiments
+number_of_balls = 3 + 2 + 6
+for i in range(1, number_of_balls + 3):
+    newhat = Hat(yellow=3, blue=2, green=6)
+    print("hat before drawing", newhat.contents)
+    drawn = newhat.draw(i)
+    print("hat after drawing", newhat.contents)
+    print("drawn", drawn)
+    print(
+        f"Length of content after draw is {max(0, number_of_balls - i)}:",
+        len(newhat.contents) == max(0, number_of_balls - i),
+    )
+    print(
+        f"Length of drawn array is {min(i, number_of_balls)}:",
+        len(drawn) == min(i, number_of_balls),
+    )
+    print("\n\n\n")
